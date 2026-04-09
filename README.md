@@ -84,6 +84,49 @@ All pipeline activity is reflected in real time on the **Dashboard** and **Analy
 
 ---
 
+## 🔄 Application Flowchart
+
+```mermaid
+flowchart TD
+    A([🚀 Start]) --> B{CV Source?}
+
+    B -->|📧 Email| C[Auto-fetch from IMAP Inbox]
+    B -->|📁 Manual| D[HR Bulk Upload via UI]
+
+    C --> E[Raw PDF / DOCX Files]
+    D --> E
+
+    E --> F[🔍 Text Extraction\nPDFMiner · PDFPlumber · OCR]
+    F --> G[🤖 LLM Parsing\nGroq / Llama]
+    G --> H[🏷️ NER Enrichment\nSpacy]
+
+    H --> I{Duplicate\nDetected?}
+
+    I -->|✅ Yes| J[Merge / Flag Profile]
+    I -->|❌ No| K[(💾 Candidate Database)]
+
+    J -.->|Review & merge| K
+
+    K --> L{Action?}
+
+    L -->|🔍 Screen| M[HR selects Job Description]
+    L -->|💡 Recommend| N[New JD Created]
+
+    M --> O[Sentence Transformer\nVectorisation]
+    O --> P[Cosine Similarity\n+ Weighted Scoring]
+    P --> Q[📋 Ranked Shortlist\n& Longlist]
+
+    N --> R[ML Recommendation\nModule]
+    R --> S[🎯 Predictive Candidate\nSuggestions]
+
+    Q --> T[📊 Dashboard & Analytics]
+    S --> T
+
+    T --> U([✅ End])
+```
+
+---
+
 ## 🏗 System Workflow
 
 ```mermaid
