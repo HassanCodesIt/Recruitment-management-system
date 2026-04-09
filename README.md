@@ -6,6 +6,84 @@ A comprehensive, production-ready recruitment management system designed to stre
 
 ---
 
+## Application Screenshots
+
+> **Note:** Replace the placeholder images below with actual screenshots once the application is running. Screenshots should be placed in `assets/screenshots/`.
+
+### 📊 Dashboard – KPI Overview & Recruitment Funnel
+<img src="assets/screenshots/dashboard.png" alt="Dashboard showing KPIs, recruitment funnel, and recent activity metrics" width="900"/>
+
+---
+
+### 📧 CV Collection – Email Fetching & Manual Upload
+<img src="assets/screenshots/cv-collection.png" alt="CV Collection page with email auto-fetch and manual PDF/DOCX bulk upload options" width="900"/>
+
+---
+
+### 🔍 Screening Results – AI-Ranked Shortlist
+<img src="assets/screenshots/screening-results.png" alt="AI Screening results page showing shortlisted candidates ranked by semantic match score" width="900"/>
+
+---
+
+### 👥 Candidate Database – Search & Profile View
+<img src="assets/screenshots/candidate-database.png" alt="Candidate Database with search filters, candidate profiles, skills breakdown, and duplicate flags" width="900"/>
+
+---
+
+### 💡 Vacancy Recommendations – Predictive Matching
+<img src="assets/screenshots/recommendations.png" alt="Vacancy Recommendations page showing AI-suggested candidates from the historical database matched to a new job description" width="900"/>
+
+---
+
+### 📈 Analytics & Reports – Trend Visualization
+<img src="assets/screenshots/analytics.png" alt="Analytics and Reports page displaying recruitment trend charts, funnel breakdowns, and exportable CSV data" width="900"/>
+
+---
+
+## How It Works
+
+The system follows a linear, AI-augmented pipeline from sourcing raw CVs through to delivering a ranked shortlist and predictive recommendations.
+
+### Step 1 – CV Sourcing
+HR professionals can source candidate CVs in two ways:
+- **Automated Email Listener:** The system connects to a configured IMAP inbox, scans for recruitment-related emails, and downloads attached PDF/DOCX files automatically.
+- **Manual Batch Upload:** HR staff can drag and drop multiple CV files directly through the Streamlit frontend without configuring email.
+
+### Step 2 – AI Document Parsing
+Each CV is fed through the multi-tiered **Text Extraction Engine**:
+1. **Structural Parsing:** PDFMiner and PDFPlumber extract raw text from both standard and non-standard PDF layouts. OCR handles scanned or image-based documents.
+2. **LLM Extraction:** The extracted text is passed to a Groq-hosted Llama model, which identifies and structures key entities – name, contact details, work history, skills, certifications, education, and seniority level – returning a clean JSON payload.
+3. **NER Enrichment:** Spacy Named Entity Recognition cross-validates and maps entities to the standardized database schema, catching anything the LLM may have normalized differently.
+
+### Step 3 – Duplicate Detection & Profile Storage
+Before a new candidate profile is committed to the database, the **Duplicate Resolution Engine** runs three validation checks:
+- Exact email match
+- Normalized phone number comparison
+- Token Set Ratio fuzzy-matching on candidate names
+
+Profiles that exceed a configurable similarity threshold are flagged, merged, or suspended to prevent duplicate entries from distorting shortlist rankings.
+
+### Step 4 – Semantic AI Screening
+When an HR user triggers screening for a Job Description:
+1. The active JD's requirements are vectorized using **Sentence Transformers**.
+2. Every stored candidate profile is also vectorized and scored for cosine similarity against the JD vector.
+3. Explicit keyword, certification, and experience-year signals are then layered on top with **HR-configurable weightings**.
+4. Candidates are sorted into a **Prioritized Ranked Shortlist** (top matches), a Longlist (secondary candidates), and a full results table.
+
+### Step 5 – Predictive Recommendations
+The **ML Recommendation Module** operates independently of active screening:
+- When a new JD is created, the module runs a background pass against the *entire* historical candidate pool, including previously reviewed or rejected applicants.
+- It surfaces candidates who are mathematically well-aligned to the new role but may have been missed in prior cycles – preventing talent from falling through the cracks.
+
+### Step 6 – Dashboard & Analytics
+All pipeline activity is reflected in real time on the **Dashboard** and **Analytics** pages:
+- Aggregate ingestion counts and parsing success rates
+- Recruitment funnel visualization (sourced → parsed → screened → shortlisted)
+- Per-position metric breakdowns
+- Exportable CSV reports for offline analysis and stakeholder reporting
+
+---
+
 ## 🏗 System Workflow
 
 ```mermaid
